@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teleprompter</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Device Selection Bar -->
+    <div id="device-bar">
+      <label>
+        Camera:
+        <select id="video-source"></select>
+      </label>
+      <label>
+        Microphone:
+        <select id="audio-source"></select>
+      </label>
+      <button id="rotate-btn" class="btn-rotate" title="Rotate camera 90°">Rotate</button>
+    </div>
+
+    <!-- Main Area: Teleprompter (large) | Camera (small right column) -->
+    <div id="main-area">
+      <div id="teleprompter-panel">
+        <div id="prompter-display" class="hidden">
+          <div id="prompter-text"></div>
+        </div>
+        <textarea id="prompter-edit" placeholder="Paste your script here..."></textarea>
+        <div id="prompter-controls">
+          <button id="toggle-edit-btn">Preview</button>
+          <label>
+            Speed:
+            <input type="range" id="speed-slider" min="1" max="10" value="3">
+          </label>
+        </div>
+      </div>
+
+      <div id="camera-panel">
+        <video id="camera-preview" autoplay muted playsinline></video>
+        <div id="rec-indicator" class="hidden">REC</div>
+      </div>
+    </div>
+
+    <!-- Controls Bar -->
+    <div id="controls-bar">
+      <div id="record-controls">
+        <button id="record-btn" class="btn-record">Record</button>
+        <button id="stop-btn" class="btn-stop" disabled>Stop</button>
+      </div>
+      <div id="publish-area">
+        <button id="publish-btn" class="btn-publish" disabled>Publish</button>
+        <div id="progress-bar" class="hidden">
+          <div id="progress-fill"></div>
+          <span id="progress-text">0%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Segment Strip -->
+    <div id="segment-strip">
+      <div id="segments-container"></div>
+      <div id="no-segments">No segments recorded yet. Press Record to start.</div>
+    </div>
+  </div>
+
+  <!-- Segment Preview Modal -->
+  <div id="preview-modal" class="hidden">
+    <div id="preview-backdrop"></div>
+    <div id="preview-content">
+      <video id="preview-video" controls></video>
+      <button id="preview-close">Close</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

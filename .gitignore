@@ -1,0 +1,8 @@
+node_modules/
+recordings/*.webm
+recordings/*.mp4
+recordings/concat-list.txt
+recordings/rotated-*
+dist/
+*.log
+.DS_Store
