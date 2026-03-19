@@ -9,8 +9,16 @@ contextBridge.exposeInMainWorld('api', {
   showSaveDialogWebm: () => ipcRenderer.invoke('show-save-dialog-webm'),
   exportSegment: (filePath, outputPath, rotation) =>
     ipcRenderer.invoke('export-segment', { filePath, outputPath, rotation }),
-  combineVideos: (videoSegments, outputPath) =>
-    ipcRenderer.invoke('combine-videos', { videoSegments, outputPath }),
-  onExportProgress: (callback) =>
-    ipcRenderer.on('export-progress', (event, percent) => callback(percent)),
+  combineVideos: (videoSegments, outputPath, denoise) =>
+    ipcRenderer.invoke('combine-videos', { videoSegments, outputPath, denoise }),
+  checkSamAudio: () => ipcRenderer.invoke('check-sam-audio'),
+  onExportProgress: (callback) => {
+    // Remove all previous listeners to prevent accumulation
+    ipcRenderer.removeAllListeners('export-progress');
+    ipcRenderer.on('export-progress', (event, percent) => callback(percent));
+  },
+  onExportProgressStatus: (callback) => {
+    ipcRenderer.removeAllListeners('export-progress-status');
+    ipcRenderer.on('export-progress-status', (event, status) => callback(status));
+  },
 });

@@ -8,60 +8,78 @@
 </head>
 <body>
   <div id="app">
-    <!-- Device Selection Bar -->
-    <div id="device-bar">
-      <label>
-        Camera:
-        <select id="video-source"></select>
-      </label>
-      <label>
-        Microphone:
-        <select id="audio-source"></select>
-      </label>
-      <button id="rotate-btn" class="btn-rotate" title="Rotate camera 90°">Rotate</button>
-    </div>
-
-    <!-- Main Area: Teleprompter (large) | Camera (small right column) -->
-    <div id="main-area">
-      <div id="teleprompter-panel">
-        <div id="prompter-display" class="hidden">
-          <div id="prompter-text"></div>
-        </div>
-        <textarea id="prompter-edit" placeholder="Paste your script here..."></textarea>
-        <div id="prompter-controls">
-          <button id="toggle-edit-btn">Preview</button>
-          <label>
-            Speed:
-            <input type="range" id="speed-slider" min="1" max="10" value="3">
-          </label>
-        </div>
+    <!-- Main Screen: Teleprompter fills everything except the sidebar -->
+    <div id="main-screen">
+      <!-- Floating Top Bar for Devices -->
+      <div id="device-bar" class="floating-panel top-panel">
+        <label>
+          Camera:
+          <select id="video-source"></select>
+        </label>
+        <label>
+          Mic:
+          <select id="audio-source"></select>
+        </label>
+        <button id="rotate-btn" class="btn-icon" title="Rotate camera 90°">⟳ Rotate</button>
+        <div class="divider"></div>
+        <button id="toggle-edit-btn" class="btn-secondary">Preview Script</button>
       </div>
 
-      <div id="camera-panel">
+      <!-- Teleprompter Area -->
+      <div id="prompter-display" class="hidden">
+        <div id="prompter-text"></div>
+      </div>
+      <div id="eyeline-indicator" class="hidden"></div>
+      <textarea id="prompter-edit" placeholder="Paste your script here..."></textarea>
+
+      <!-- Floating PiP Camera -->
+      <div id="camera-panel" class="floating-panel pip">
         <video id="camera-preview" autoplay muted playsinline></video>
         <div id="rec-indicator" class="hidden">REC</div>
       </div>
-    </div>
 
-    <!-- Controls Bar -->
-    <div id="controls-bar">
-      <div id="record-controls">
-        <button id="record-btn" class="btn-record">Record</button>
-        <button id="stop-btn" class="btn-stop" disabled>Stop</button>
-      </div>
-      <div id="publish-area">
-        <button id="publish-btn" class="btn-publish" disabled>Publish</button>
-        <div id="progress-bar" class="hidden">
-          <div id="progress-fill"></div>
-          <span id="progress-text">0%</span>
+      <!-- Floating Bottom Controls (The Capsule) -->
+      <div id="controls-bar" class="floating-panel bottom-panel">
+        <div id="record-controls">
+          <button id="record-btn" class="btn-record">
+            <div class="rec-label"><span class="red-dot">●</span> REC</div>
+            <div id="record-timer">00:00:00</div>
+          </button>
+          <button id="stop-btn" class="btn-stop" disabled>■ STOP</button>
+        </div>
+        
+        <div class="divider"></div>
+
+        <div id="prompter-controls">
+          <div class="speed-readout">Speed: <span id="wpm-display">100</span> wpm</div>
+          <div class="speed-slider-container">
+            <button id="speed-down" class="btn-icon-small">-</button>
+            <input type="range" id="speed-slider" min="10" max="250" value="100" step="5">
+            <button id="speed-up" class="btn-icon-small">+</button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Segment Strip -->
-    <div id="segment-strip">
+    <!-- Right Sidebar for Recordings -->
+    <div id="segment-sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <h3>My Takes</h3>
+        <button id="publish-btn" class="btn-publish" disabled>Publish</button>
+      </div>
+      <div id="denoise-option">
+        <label id="denoise-label">
+          <input type="checkbox" id="denoise-toggle">
+          <span>Clean audio (AI)</span>
+        </label>
+        <span id="denoise-status"></span>
+      </div>
+      <div id="progress-bar" class="hidden sidebar-progress">
+        <div id="progress-fill"></div>
+        <span id="progress-text">0%</span>
+      </div>
       <div id="segments-container"></div>
-      <div id="no-segments">No segments recorded yet. Press Record to start.</div>
+      <div id="no-segments">No takes yet.</div>
     </div>
   </div>
 
@@ -70,9 +88,11 @@
     <div id="preview-backdrop"></div>
     <div id="preview-content">
       <video id="preview-video" controls></video>
-      <button id="preview-close">Close</button>
+      <button id="preview-close" class="btn-secondary">Close</button>
     </div>
   </div>
+  
+  <div id="toast-container"></div>
 
   <script src="app.js"></script>
 </body>
