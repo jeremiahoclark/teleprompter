@@ -281,7 +281,7 @@ ipcMain.handle('combine-videos', async (event, { videoSegments, outputPath, deno
       await new Promise((resolve, reject) => {
         ffmpeg()
           .input(processedPaths[0])
-          .outputOptions(['-c:v', 'libx264', '-c:a', 'aac', '-movflags', '+faststart'])
+          .outputOptions(['-c:v', 'libx264', '-c:a', 'aac', '-async', '1', '-movflags', '+faststart'])
           .output(outputPath)
           .on('progress', (progress) => {
             if (progress.percent) {
@@ -305,7 +305,7 @@ ipcMain.handle('combine-videos', async (event, { videoSegments, outputPath, deno
         ffmpeg()
           .input(listPath)
           .inputOptions(['-f', 'concat', '-safe', '0'])
-          .outputOptions(['-c:v', 'libx264', '-c:a', 'aac', '-movflags', '+faststart'])
+          .outputOptions(['-c:v', 'libx264', '-c:a', 'aac', '-async', '1', '-movflags', '+faststart'])
           .output(outputPath)
           .on('progress', (progress) => {
             if (progress.percent) {

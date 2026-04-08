@@ -245,14 +245,16 @@ window.addEventListener('resize', () => {
 recordBtn.addEventListener('click', startRecording);
 stopBtn.addEventListener('click', stopRecording);
 
-function startRecording() {
+async function startRecording() {
   if (!currentStream) return;
 
   recordedChunks = [];
 
-  const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')
-    ? 'video/webm;codecs=vp9,opus'
-    : 'video/webm';
+  const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=avc1,opus')
+    ? 'video/webm;codecs=avc1,opus'
+    : MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')
+      ? 'video/webm;codecs=vp9,opus'
+      : 'video/webm';
 
   mediaRecorder = new MediaRecorder(currentStream, { mimeType });
 
@@ -265,7 +267,9 @@ function startRecording() {
     await saveSegment(blob);
   };
 
-  mediaRecorder.start(100); // collect data every 100ms
+  // Let the camera produce stable frames before recording to avoid A/V drift
+  await new Promise(resolve => setTimeout(resolve, 1500));
+  mediaRecorder.start();
   isRecording = true;
 
   recordBtn.disabled = true;
